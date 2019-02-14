@@ -8,7 +8,7 @@ the optimization problem is posed to compute the control input such that the con
 
 The gists from the paper:
 - the noise assumption v<sub>t</sub> &#820; N(u<sub>t</sub>, &sum;) stems from noise in low-level controllers
-- the noise term can be pulled out of the &eta; equation and neatly interpreted as a weight for the MC samples in the iterative update law
+- the noise term can be pulled out of the Monte-Carlo approximation (&eta;) equation and neatly interpreted as a weight for the MC samples in the iterative update law
 - given the optimal control input distribution Q*, it is derived u*<sub>t</sub> = &#8747;q*(V)v<sub>t</sub>dV
 - computing the integral is not possible since q* is unknown, instead use importance sampling to sample from proposal distribution: 
   
