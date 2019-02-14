@@ -17,11 +17,7 @@ The gists:
   <img src="https://latex.codecogs.com/svg.latex?\int&space;q(v)&space;\underbrace{&space;\frac{q^{*}(V)}{p(V)}&space;\frac{p(V)}{q(V)}}_\text{w(V)}&space;v_t&space;dV&space;=&space;\mathop{\mathbb{E}_Q}&space;[w(V)v_t]" title="\int q(v) \underbrace{ \frac{q^{*}(V)}{p(V)} \frac{p(V)}{q(V)}}_\text{w(V)} v_t dV = \mathop{\mathbb{E}_Q} [w(V)v_t]" />
   </p>
   
-  where 
-  
-  <p align="center">
-  <img src="https://latex.codecogs.com/svg.latex?\frac{q^{*}(V)}{p(V)}" title="\frac{q^{*}(V)}{p(V)}" /> 
-  </p>
+  where <img src="https://latex.codecogs.com/svg.latex?\frac{q^{*}(V)}{p(V)}" title="\frac{q^{*}(V)}{p(V)}" /> 
   
   can be approximated by the Monte-Carlo estimate given in algorithm 2 by &eta;.
   
