@@ -9,9 +9,7 @@ the optimization problem is posed to compute the control input such that the con
 The gists:
 - the noise assumption v<sub>t</sub> &#820; N(u<sub>t</sub>, &sum;) stems from noise in low-level controllers
 - given the optimal control input distribution Q*, it is derived u*<sub>t</sub> = &#8747;q*(V)v<sub>t</sub>dV
-- computing the integral is not possible since q* is unknown
-  
-  \-> use importance sampling to sample from proposal distribution: 
+- computing the integral is not possible since q* is unknown, instead use importance sampling to sample from proposal distribution: 
   
   <p align="center">
   <img src="https://latex.codecogs.com/svg.latex?\int&space;q(v)&space;\underbrace{&space;\frac{q^{*}(V)}{p(V)}&space;\frac{p(V)}{q(V)}}_\text{w(V)}&space;v_t&space;dV&space;=&space;\mathop{\mathbb{E}_Q}&space;[w(V)v_t]" title="\int q(v) \underbrace{ \frac{q^{*}(V)}{p(V)} \frac{p(V)}{q(V)}}_\text{w(V)} v_t dV = \mathop{\mathbb{E}_Q} [w(V)v_t]" />
