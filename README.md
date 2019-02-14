@@ -10,7 +10,7 @@ The gists from the paper:
 - the noise assumption v<sub>t</sub> &#820; N(u<sub>t</sub>, &sum;) stems from noise in low-level controllers
 - the noise term can be pulled out of the Monte-Carlo approximation (&eta;) equation and neatly interpreted as a weight for the MC samples in the iterative update law
 - given the optimal control input distribution Q*, it is derived u*<sub>t</sub> = &#8747;q*(V)v<sub>t</sub>dV
-- computing the integral is not possible since q* is unknown, instead use importance sampling to sample from proposal distribution: 
+- computing the integral is not possible since q* is unknown, instead importance sampling is used to sample from the proposal distribution: 
   
   <p align="center">
   <img src="https://latex.codecogs.com/svg.latex?\int(v)&space;\underbrace{&space;\frac{q^{*}(V)}{p(V)}&space;\frac{p(V)}{q(V)}}_{\mathrm{\omega}(V)}v_t&space;dV&space;=&space;\mathop{\mathbb{E}_Q}&space;[\omega(V)v_t]" title="\int(v) \underbrace{ \frac{q^{*}(V)}{p(V)} \frac{p(V)}{q(V)}}_{\mathrm{\omega}(V)}v_t dV = \mathop{\mathbb{E}_Q} [\omega(V)v_t]" />
