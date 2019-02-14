@@ -1,4 +1,4 @@
-# MPPI for the OpenAI gym pendulum environment
+# MPPI implementation with the OpenAI gym pendulum environment
 This repository implements Model Predictive Path Integral (MPPI) as introduced by the paper 
 [Information Theoretic MPC for Model-Based Reinforcement Learning](https://ieeexplore.ieee.org/document/7989202/) by 
 (Williams et al., 2017) and takes as forward model the pendulum OpenAI Gym environment.
