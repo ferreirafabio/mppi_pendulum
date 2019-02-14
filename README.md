@@ -6,7 +6,7 @@ This repository implements Model Predictive Path Integral (MPPI) as introduced b
 The paper derives an optimal control law as a (noise-) weighted average over sampled trajectory. In particular, 
 the optimization problem is posed to compute the control input such that the controlled distribution Q is pushed as close as possible to the optimal distribution Q*. This corresponds to minimizing the KL divergence between Q and Q*.
 
-The gists:
+The gists from the paper:
 - the noise assumption v<sub>t</sub> &#820; N(u<sub>t</sub>, &sum;) stems from noise in low-level controllers
 - the noise term can pulled out of the &eta; equation and neatly interpreted as a weight for the MC samples in the iterative update law
 - given the optimal control input distribution Q*, it is derived u*<sub>t</sub> = &#8747;q*(V)v<sub>t</sub>dV
