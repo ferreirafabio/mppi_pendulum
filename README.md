@@ -13,9 +13,11 @@ The gists:
   - --> use importance sampling to sample from proposal distribution: 
   <img src="https://latex.codecogs.com/svg.latex?\int&space;q(v)&space;\underbrace{&space;\frac{q^{*}(V)}{p(V)}&space;\frac{p(V)}{q(V)}}_\text{w(V)}&space;v_t&space;dV&space;=&space;\mathop{\mathbb{E}_Q}&space;[w(V)v_t]" title="\int q(v) \underbrace{ \frac{q^{*}(V)}{p(V)} \frac{p(V)}{q(V)}}_\text{w(V)} v_t dV = \mathop{\mathbb{E}_Q} [w(V)v_t]" />
   
-  where <img src="https://latex.codecogs.com/svg.latex?\frac{q^{*}(V)}{p(V)}" title="\frac{q^{*}(V)}{p(V)}" />
-
-can be approximated by the Monte-Carlo estimate given in algorithm 2 by &eta;.
+  where 
+  
+  <img src="https://latex.codecogs.com/svg.latex?\frac{q^{*}(V)}{p(V)}" title="\frac{q^{*}(V)}{p(V)}" /> can be approximated by the Monte-Carlo estimate given in algorithm 2 by &eta;.
+  
   --> this yields <img src="https://latex.codecogs.com/svg.latex?u_t^{i&plus;1}&space;=&space;u_t^i&space;&plus;&space;\sum_{n=1}^N&space;\omega&space;(\mathcal{E}_n)&space;\epsilon_t^n" title="u_t^{i+1} = u_t^i + \sum_{n=1}^N \omega (\mathcal{E}_n) \epsilon_t^n" />
+  
   which resembles an iterative procedure to improve the MC estiamte by using a more accurate importance sampler
   
