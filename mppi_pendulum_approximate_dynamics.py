@@ -97,8 +97,8 @@ if __name__ == "__main__":
     ENV_NAME = "Pendulum-v0"
     TIMESTEPS = 20  # T
     N_SAMPLES = 100  # K
-    ACTION_LOW = -5.0
-    ACTION_HIGH = 5.0
+    ACTION_LOW = -2.0
+    ACTION_HIGH = 2.0
 
     noise_mu = 0
     noise_sigma = 10
@@ -122,16 +122,39 @@ if __name__ == "__main__":
 
 
     def dynamics(state, perturbed_action):
+        # true dynamics
+        # th, thdot = state
+        #
+        # g = 10
+        # m = 1
+        # l = 1
+        # dt = 0.05
+        #
+        # u = perturbed_action
+        # u = np.clip(u, -2, 2)
+        #
+        # newthdot = thdot + (-3 * g / (2 * l) * np.sin(th + np.pi) + 3. / (m * l ** 2) * u) * dt
+        # newth = th + newthdot * dt
+        # newthdot = np.clip(newthdot, -8, 8)
+        #
+        # state = np.array([newth, newthdot])
+        # return state
+
         u = torch.tensor([perturbed_action], dtype=torch.double)
+        u = torch.clamp(u, ACTION_LOW, ACTION_HIGH)
         xu = torch.cat((state, u))
         state_residual = network(xu)
         return state + state_residual
 
 
+    def angle_normalize(x):
+        return (((x + np.pi) % (2 * np.pi)) - np.pi)
+
+
     def running_cost(state, action):
         theta = state[0]
         theta_dt = state[1]
-        cost = theta ** 2 + 0.1 * theta_dt ** 2 + 0.001 * action ** 2
+        cost = angle_normalize(theta) ** 2 + 0.1 * theta_dt ** 2 + 0.001 * action ** 2
         return cost
 
 
@@ -141,6 +164,8 @@ if __name__ == "__main__":
     def train(new_data):
         global dataset
         new_data = torch.from_numpy(new_data)
+        # clamp actions
+        new_data[:, -1] = torch.clamp(new_data[:, -1], ACTION_LOW, ACTION_HIGH)
         # append data to whole dataset
         if dataset is None:
             dataset = new_data
