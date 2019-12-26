@@ -49,7 +49,7 @@ class MPPI():
             state = self.F(state, perturbed_action_t)
             self.cost_total[k] += self.running_cost(state, perturbed_action_t)
             # add action perturbation cost
-            # self.cost_total[k] += perturbed_action_t * self.action_cost[k, t]
+            self.cost_total[k] += perturbed_action_t * self.action_cost[k, t]
         # this is the additional terminal cost (running state cost at T already accounted for)
         if self.terminal_state_cost:
             self.cost_total[k] += self.terminal_state_cost(state)
@@ -85,7 +85,7 @@ class MPPI():
             self.state = np.array(env.env.state)
 
             di = i % retrain_after_iter
-            if di == 0:
+            if di == 0 and i > 0:
                 retrain_dynamics(dataset)
                 # don't have to clear dataset since it'll be overridden, but useful for debugging
                 dataset = np.zeros((retrain_after_iter, self.nx + self.nu))
