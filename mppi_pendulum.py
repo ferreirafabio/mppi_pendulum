@@ -64,8 +64,8 @@ class MPPI():
 
 if __name__ == "__main__":
     ENV_NAME = "Pendulum-v0"
-    TIMESTEPS = 20  # T
-    N_SAMPLES = 1000  # K
+    TIMESTEPS = 10  # T
+    N_SAMPLES = 100  # K
     ACTION_LOW = -2.0
     ACTION_HIGH = 2.0
 
