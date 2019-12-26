@@ -83,6 +83,8 @@ class MPPI():
             self.U = np.roll(self.U, -1)  # shift all elements to the left
             self.U[-1] = self.u_init  #
             self.state = np.array(env.env.state)
+            self.state[0] = angle_normalize(self.state[0])
+            logger.debug(self.state)
 
             di = i % retrain_after_iter
             if di == 0 and i > 0:
@@ -95,7 +97,7 @@ class MPPI():
 
 if __name__ == "__main__":
     ENV_NAME = "Pendulum-v0"
-    TIMESTEPS = 20  # T
+    TIMESTEPS = 15  # T
     N_SAMPLES = 100  # K
     ACTION_LOW = -2.0
     ACTION_HIGH = 2.0
@@ -104,9 +106,20 @@ if __name__ == "__main__":
     noise_sigma = 10
     lambda_ = 1
 
+    # random seed
+    import random
+
+    randseed = 5
+    if randseed is None:
+        randseed = random.randint(0, 1000000)
+    random.seed(randseed)
+    np.random.seed(randseed)
+    torch.manual_seed(randseed)
+    logger.info("random seed %d", randseed)
+
     # new hyperparmaeters for approximate dynamics
     H_UNITS = 16
-    TRAIN_EPOCH = 50
+    TRAIN_EPOCH = 150
     BOOT_STRAP_ITER = 100
 
     nx = 2
@@ -114,9 +127,9 @@ if __name__ == "__main__":
     # network output is state residual
     network = torch.nn.Sequential(
         torch.nn.Linear(nx + nu, H_UNITS),
-        torch.nn.Tanh(),
+        torch.nn.ReLU(),
         torch.nn.Linear(H_UNITS, H_UNITS),
-        torch.nn.Tanh(),
+        torch.nn.ReLU(),
         torch.nn.Linear(H_UNITS, nx)
     ).double()
 
@@ -144,11 +157,24 @@ if __name__ == "__main__":
         u = torch.clamp(u, ACTION_LOW, ACTION_HIGH)
         xu = torch.cat((state, u))
         state_residual = network(xu)
-        return state + state_residual
+        next_state = state + state_residual
+        next_state[0] = angle_normalize(next_state[0])
+        return next_state
 
 
     def angle_normalize(x):
         return (((x + np.pi) % (2 * np.pi)) - np.pi)
+
+
+    import math
+
+
+    def angular_diff_batch(a, b):
+        """Angle difference from b to a (a - b)"""
+        d = a - b
+        d[d > math.pi] -= 2 * math.pi
+        d[d < -math.pi] += 2 * math.pi
+        return d
 
 
     def running_cost(state, action):
@@ -163,6 +189,8 @@ if __name__ == "__main__":
 
     def train(new_data):
         global dataset
+        # not normalized inside the simulator
+        new_data[:, 0] = angle_normalize(new_data[:, 0])
         new_data = torch.from_numpy(new_data)
         # clamp actions
         new_data[:, -1] = torch.clamp(new_data[:, -1], ACTION_LOW, ACTION_HIGH)
@@ -174,7 +202,9 @@ if __name__ == "__main__":
 
         # train on the whole dataset (assume small enough we can train on all together)
         XU = dataset
-        Y = XU[1:, :nx] - XU[:-1, :nx]  # x' - x residual
+        dtheta = angular_diff_batch(XU[1:, 0], XU[:-1, 0])
+        dtheta_dt = XU[1:, 1] - XU[:-1, 1]
+        Y = torch.cat((dtheta.view(-1, 1), dtheta_dt.view(-1, 1)), dim=1)  # x' - x residual
         XU = XU[:-1]  # make same size as Y
 
         # thaw network
@@ -188,7 +218,6 @@ if __name__ == "__main__":
             Yhat = network(XU)
             loss = (Y - Yhat).norm(2, dim=1) ** 2
             loss.mean().backward()
-            # torch.nn.utils.clip_grad_norm_(network.parameters(), 1)
             optimizer.step()
             logger.info("ds %d epoch %d loss %f", dataset.shape[0], epoch, loss.mean().item())
 
@@ -212,9 +241,8 @@ if __name__ == "__main__":
         for i in range(BOOT_STRAP_ITER):
             pre_action_state = env.env.state
             action = np.random.uniform(low=ACTION_LOW, high=ACTION_HIGH)
-            # env.env.state = self.state
             env.step([action])
-            env.render()
+            # env.render()
             new_data[i, :nx] = pre_action_state
             new_data[i, nx:] = action
 
