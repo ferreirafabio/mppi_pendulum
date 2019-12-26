@@ -127,9 +127,9 @@ if __name__ == "__main__":
     # network output is state residual
     network = torch.nn.Sequential(
         torch.nn.Linear(nx + nu, H_UNITS),
-        torch.nn.ReLU(),
+        torch.nn.Tanh(),
         torch.nn.Linear(H_UNITS, H_UNITS),
-        torch.nn.ReLU(),
+        torch.nn.Tanh(),
         torch.nn.Linear(H_UNITS, nx)
     ).double()
 
