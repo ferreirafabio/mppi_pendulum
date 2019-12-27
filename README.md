@@ -6,7 +6,7 @@ This repository implements Model Predictive Path Integral (MPPI) as introduced b
 ## Requirements
 - OpenAI Gym
 - numpy
-- torch
+- pytorch (optional, for approximate dynamics)
 
 ## Gists of the paper 
 The paper derives an optimal control law as a (noise-) weighted average over sampled trajectories. In particular, 
