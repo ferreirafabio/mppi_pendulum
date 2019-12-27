@@ -229,17 +229,17 @@ if __name__ == "__main__":
     U = np.random.uniform(low=ACTION_LOW, high=ACTION_HIGH, size=TIMESTEPS)  # pendulum joint effort in (-2, +2)
 
     downward_start = True
-    env = gym.make(ENV_NAME)
+    env = gym.make(ENV_NAME).env # bypass the default TimeLimit wrapper
     env.reset()
     if downward_start:
-        env.env.state = [np.pi, 1]
+        env.state = [np.pi, 1]
 
     # bootstrap network with random actions
     if BOOT_STRAP_ITER:
         logger.info("bootstrapping with random action for %d actions", BOOT_STRAP_ITER)
         new_data = np.zeros((BOOT_STRAP_ITER, nx + nu))
         for i in range(BOOT_STRAP_ITER):
-            pre_action_state = env.env.state
+            pre_action_state = env.state
             action = np.random.uniform(low=ACTION_LOW, high=ACTION_HIGH)
             env.step([action])
             # env.render()
@@ -247,10 +247,15 @@ if __name__ == "__main__":
             new_data[i, nx:] = action
 
         train(new_data)
-        env.reset()
-        if downward_start:
-            env.env.state = [np.pi, 1]
         logger.info("bootstrapping finished")
+
+    from gym import wrappers
+    import time
+
+    env = wrappers.Monitor(env, '/tmp/mppi/{}/'.format(time.time()), force=True)
+    env.reset()
+    if downward_start:
+        env.env.state = [np.pi, 1]
 
     mppi_gym = MPPI(dynamics, K=N_SAMPLES, T=TIMESTEPS, U=U, running_cost=running_cost, lambda_=lambda_,
                     noise_mu=noise_mu, noise_sigma=noise_sigma,
