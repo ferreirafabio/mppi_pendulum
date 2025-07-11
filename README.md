@@ -16,14 +16,13 @@ The gists from the paper:
 - the noise term can be pulled out of the Monte-Carlo approximation (&eta;) equation and neatly interpreted as a weight for the MC samples in the iterative update law
 - given the optimal control input distribution Q*, it is derived u*<sub>t</sub> = &#8747;q*(V)v<sub>t</sub>dV
 - computing the integral is not possible since q* is unknown, instead importance sampling is used to sample from the proposal distribution: 
+
+![importance-weighting equation](https://latex.codecogs.com/png.latex?\bg%7Bwhite%7D\int(v)\underbrace{\frac{q^{*}(V)}{p(V)}\frac{p(V)}{q(V)}}_{\omega(V)}v_t\,dV=\mathop{\mathbb{E}_Q}[\omega(V)v_t])
   
-  <p align="center">
-  <img src="https://latex.codecogs.com/svg.latex?\int(v)&space;\underbrace{&space;\frac{q^{*}(V)}{p(V)}&space;\frac{p(V)}{q(V)}}_{\mathrm{\omega}(V)}v_t&space;dV&space;=&space;\mathop{\mathbb{E}_Q}&space;[\omega(V)v_t]" title="\int(v) \underbrace{ \frac{q^{*}(V)}{p(V)} \frac{p(V)}{q(V)}}_{\mathrm{\omega}(V)}v_t dV = \mathop{\mathbb{E}_Q} [\omega(V)v_t]" />
-  </p>
   
-  where <img src="https://latex.codecogs.com/svg.latex?\frac{q^{*}(V)}{p(V)}" title="\frac{q^{*}(V)}{p(V)}" /> can be approximated by the Monte-Carlo estimate given in algorithm 2 as &eta;, yielding:
-    <p align="center">
-  <img src="https://latex.codecogs.com/svg.latex?u_t^{i&plus;1}&space;=&space;u_t^i&space;&plus;&space;\sum_{n=1}^N&space;\omega&space;(\mathcal{E}_n)&space;\epsilon_t^n" title="u_t^{i+1} = u_t^i + \sum_{n=1}^N \omega (\mathcal{E}_n) \epsilon_t^n" />
-    </p>
-  which resembles an iterative procedure to improve the MC estimate by using a more accurate importance sampler
   
+where ![fraction](https://latex.codecogs.com/png.latex?\bg%7Bwhite%7D\frac{q^{*}(V)}{p(V)}) can be approximated by the Monte-Carlo estimate given in algorithm 2 as &eta;, yielding:
+
+ ![update](https://latex.codecogs.com/png.latex?\bg%7Bwhite%7Du_t^{i+1}=u_t^i+\sum_{n=1}^N\omega(\mathcal{E}_n)\epsilon_t^n)
+
+which resembles an iterative procedure to improve the MC estimate by using a more accurate importance sampler.
